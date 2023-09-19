@@ -1,4 +1,5 @@
 const userModel = require("../models/user");
+const { Encode, ComparePass } = require("../utils/EncodeBcrypt");
 
 const getAll = async (req, res) => {
   const users = await userModel.find({})
@@ -14,10 +15,12 @@ const get = async (req, res) => {
 
 
 const post = async (req, res) => {
-  const { username, password } = req.body
+  const { username, password, ...rest } = req.body
+  const encodePass = await Encode(password)
   const newUser = userModel({
     username,
-    password
+    password: encodePass,
+    ...rest
   });
   await newUser.save();
   res.send(newUser)
@@ -33,17 +36,17 @@ const del = async (req, res) => {
 
 const update = async (req, res) => {
   const id = req.params.id;
-  const { username, password } = req.body
+  const { username, password, ...rest } = req.body
   const user = await userModel.findByIdAndUpdate(id, {
-    username, password
+    username, password, ...rest
   })
   res.send(user)
 }
 
 const check_email_password = async ({ username, password }) => {
   const user = await userModel.findOne({ username })
-
-  if (user && user.password == password) return user
+  const isValid = ComparePass(password, user?.password)
+  if (user && isValid) return user
   return null
 }
 
