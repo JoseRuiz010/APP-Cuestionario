@@ -40,8 +40,13 @@ const update = async (req, res) => {
   res.send(user)
 }
 
+const check_email_password = async ({ username, password }) => {
+  const user = await userModel.findOne({ username })
 
+  if (user && user.password == password) return user
+  return null
+}
 
 module.exports = {
-  getAll, get, post, del, update
+  getAll, get, post, del, update, check_email_password
 }
