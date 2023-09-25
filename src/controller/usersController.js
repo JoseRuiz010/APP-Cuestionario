@@ -47,6 +47,7 @@ const check_email_password = async ({ username, password }) => {
   const user = await userModel.findOne({ username })
   const isValid = ComparePass(password, user?.password)
   if (user && isValid) return user
+
   return null
 }
 

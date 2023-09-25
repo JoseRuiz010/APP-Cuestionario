@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAll, get, post, del, update } = require('../controller/quizController');
+const { getAll, get, post, del, update, generarCode } = require('../controller/quizController');
 
 const router = express.Router();
 
@@ -8,6 +8,7 @@ router.get('/:id', get);
 router.post('/', post);
 router.delete('/:id', del);
 router.put('/:id', update);
+router.put('/code/:id', generarCode);
 
 
 

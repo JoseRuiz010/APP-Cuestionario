@@ -1,15 +1,15 @@
-const quizModel = require("../models/Quiz");
+const quizCodeModel = require("../models/CodeQuiz");
 const { Encode, ComparePass } = require("../utils/EncodeBcrypt");
 
 const getAll = async (req, res) => {
-  const quiz = await quizModel.find({})
+  const quiz = await quizCodeModel.find({})
   res.send(quiz)
 }
 
 
 const get = async (req, res) => {
   const id = req.params.id;
-  const quiz = await quizModel.findById(id)
+  const quiz = await quizCodeModel.findById(id)
   res.send(quiz);
 }
 
@@ -17,7 +17,7 @@ const get = async (req, res) => {
 const post = async (req, res) => {
   const quiz = req.body
 
-  const newQuiz = quizModel({
+  const newQuiz = quizCodeModel({
     ...quiz
   });
   await newQuiz.save();
@@ -27,7 +27,7 @@ const post = async (req, res) => {
 
 const del = async (req, res) => {
   const id = req.params.id;
-  const quiz = await quizModel.findByIdAndDelete(id)
+  const quiz = await quizCodeModel.findByIdAndDelete(id)
   res.send(quiz)
 }
 
@@ -35,14 +35,14 @@ const del = async (req, res) => {
 const update = async (req, res) => {
   const id = req.params.id;
   const quiz = req.body
-  const user = await quizModel.findByIdAndUpdate(id, {
+  const user = await quizCodeModel.findByIdAndUpdate(id, {
     ...quiz
   })
   res.send(user)
 }
 
 const generarCode = async (id) => {
-  const quizz = await quizModel.findById(id)
+  const quizz = await quizCodeModel.findById(id)
 
   return null
 }
