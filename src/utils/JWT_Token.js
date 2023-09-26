@@ -1,6 +1,6 @@
 const { sign, verify } = require("jsonwebtoken");
 
-const generarToken = (info) => {
+const generarToken = (info, exp) => {
   const token_time = process.env.TOKEN_TIME
   const secretKey = process.env.SECRET_KEY
   console.log('====================================');
@@ -9,7 +9,7 @@ const generarToken = (info) => {
   const token = sign(
     info,
     secretKey,
-    { expiresIn: token_time }
+    { expiresIn: exp ? exp : token_time }
   );
   console.log('====================================');
   console.log({ token });

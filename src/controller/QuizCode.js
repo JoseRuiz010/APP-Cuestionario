@@ -1,5 +1,5 @@
 const quizCodeModel = require("../models/CodeQuiz");
-const { Encode, ComparePass } = require("../utils/EncodeBcrypt");
+const { generarToken, decodeToken } = require("../utils/JWT_Token");
 
 const getAll = async (req, res) => {
   const quiz = await quizCodeModel.find({})
@@ -15,10 +15,15 @@ const get = async (req, res) => {
 
 
 const post = async (req, res) => {
-  const quiz = req.body
+  const { quiz_id, exp } = req.body
 
+  console.log('====================================');
+  console.log({ quiz_id, exp });
+  console.log('====================================');
+
+  const code = generarToken({ quiz_id }, exp)
   const newQuiz = quizCodeModel({
-    ...quiz
+    code, expired: exp, quiz: quiz_id
   });
   await newQuiz.save();
   res.send(newQuiz)
@@ -41,12 +46,21 @@ const update = async (req, res) => {
   res.send(user)
 }
 
-const generarCode = async (id) => {
-  const quizz = await quizCodeModel.findById(id)
+const getQuizByCode = async (req, res) => {
+  const { code } = req.body
+  console.log('====================================');
+  console.log(code);
+  console.log('====================================');
+  try {
+    const decode = decodeToken(code);
+    res.send(decode)
 
-  return null
+  } catch (error) {
+    res.send("Error de codigo")
+  }
+
 }
 
 module.exports = {
-  getAll, get, post, del, update, generarCode
+  getAll, get, post, del, update, getQuizByCode
 }
