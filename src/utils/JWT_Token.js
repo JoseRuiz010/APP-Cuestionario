@@ -4,12 +4,12 @@ const generarToken = (info, exp) => {
   const token_time = process.env.TOKEN_TIME
   const secretKey = process.env.SECRET_KEY
   console.log('====================================');
-  console.log({ ...info, token_time });
+  console.log({ ...info, token_time, exp: new String(exp).toString() });
   console.log('====================================');
   const token = sign(
     info,
     secretKey,
-    { expiresIn: exp ? exp : token_time }
+    { expiresIn: exp ? new String(exp).toString() : token_time }
   );
   console.log('====================================');
   console.log({ token });

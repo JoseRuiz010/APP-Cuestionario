@@ -15,15 +15,21 @@ const get = async (req, res) => {
 
 const post = async (req, res) => {
   const { quiz_id, exp } = req.body;
-
+  const argentinaDateTimeFormat = new Intl.DateTimeFormat('es-AR', {
+    timeZone: 'America/Argentina/Buenos_Aires',
+  });
+  const fechaHoy = (Date.now());
+  const fechaAux = new Date(exp)
+  const fechaExp = fechaAux.getTime(fechaAux.getTime() - (3 * 60 * 60 * 1000));
+  const diferenciafecha = fechaExp - fechaHoy
   console.log("====================================");
-  console.log({ quiz_id, exp });
+  console.log({ quiz_id, fechaExp, fechaHoy, diff: diferenciafecha });
   console.log("====================================");
 
-  const code = generarToken({ quiz_id }, exp);
+  const code = generarToken({ quiz_id }, (diferenciafecha));
   const newQuiz = quizCodeModel({
     code,
-    expired: exp,
+    expired: fechaExp,
     quiz: quiz_id,
   });
   await newQuiz.save();
@@ -55,7 +61,7 @@ const getQuizByCode = async (req, res) => {
     const quizz = await quizModel.findById(decode.quiz_id);
     res.send({ quizz });
   } catch (error) {
-    res.send("Error de codigo");
+    res.send("Error de codigo o su codigo expiro");
   }
 };
 
