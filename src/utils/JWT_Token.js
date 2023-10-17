@@ -3,9 +3,7 @@ const { sign, verify } = require("jsonwebtoken");
 const generarToken = (info, exp) => {
   const token_time = process.env.TOKEN_TIME
   const secretKey = process.env.SECRET_KEY
-  console.log('====================================');
-  console.log({ ...info, token_time, exp: new String(exp).toString() });
-  console.log('====================================');
+
   const token = sign(
     info,
     secretKey,
@@ -17,6 +15,17 @@ const generarToken = (info, exp) => {
 
   return token;
 }
+const validarToken = (token) => {
+  const secretKey = process.env.SECRET_KEY
+  try {
+    const verificacionToken = verify(token, secretKey);
+    console.log({ verificacionToken });
+    return validarToken
+  } catch (error) {
+    console.log('error: ' + error);
+    return null
+  }
+}
 
 const decodeToken = (authorization) => {
   const secretKey = process.env.SECRET_KEY
@@ -26,5 +35,6 @@ const decodeToken = (authorization) => {
 
 module.exports = {
   generarToken,
-  decodeToken
+  decodeToken,
+  validarToken
 }
