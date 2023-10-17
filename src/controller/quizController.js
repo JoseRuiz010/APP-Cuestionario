@@ -1,4 +1,5 @@
 const quizModel = require("../models/Quiz");
+const questionModel = require("../models/Question")
 const { Encode, ComparePass } = require("../utils/EncodeBcrypt");
 
 const getAll = async (req, res) => {
@@ -9,19 +10,27 @@ const getAll = async (req, res) => {
 
 const get = async (req, res) => {
   const id = req.params.id;
-  const quiz = await quizModel.findById(id)
+  const quiz = await quizModel.findById(id).populate('questions')
   res.send(quiz);
 }
 
 
 const post = async (req, res) => {
-  const quiz = req.body
+  const { questions, ...rest } = req.body
 
-  const newQuiz = quizModel({
-    ...quiz
+  const createdQuestions = await Promise.all(questions.map(async (questionData) => {
+    const newQuestion = new questionModel(questionData);
+    return await newQuestion.save();
+  }));
+
+  const newQuiz = new quizModel({
+    ...rest,
+    questions: createdQuestions.map(question => question._id) // Asocia las ID de las preguntas con el cuestionario
   });
   await newQuiz.save();
-  res.send(newQuiz)
+
+
+  res.send({ newQuiz, createdQuestions })
 }
 
 
