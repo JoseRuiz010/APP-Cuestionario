@@ -2,7 +2,6 @@ const { validarToken } = require("../utils/JWT_Token");
 
 
 const verificarToken = (req, res, next) => {
-  const secretKey = process.env.SECRET_KEY
   const token = req.header('Authorization');
   console.log({ token });
   if (!token) {

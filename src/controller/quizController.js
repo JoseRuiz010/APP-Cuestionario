@@ -1,6 +1,7 @@
 const quizModel = require("../models/Quiz");
 const questionModel = require("../models/Question")
 const { Encode, ComparePass } = require("../utils/EncodeBcrypt");
+const { decodeToken } = require("../utils/JWT_Token");
 
 const getAll = async (req, res) => {
   const quiz = await quizModel.find({})
@@ -17,6 +18,9 @@ const get = async (req, res) => {
 
 const post = async (req, res) => {
   const { questions, ...rest } = req.body
+  const token = req.header('Authorization');
+
+  const { id } = decodeToken(token)
 
   const createdQuestions = await Promise.all(questions.map(async (questionData) => {
     const newQuestion = new questionModel(questionData);
@@ -25,6 +29,7 @@ const post = async (req, res) => {
 
   const newQuiz = new quizModel({
     ...rest,
+    createdBy: id,
     questions: createdQuestions.map(question => question._id) // Asocia las ID de las preguntas con el cuestionario
   });
   await newQuiz.save();
