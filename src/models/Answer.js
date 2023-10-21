@@ -8,6 +8,6 @@ const answerSchema = new mongoose.Schema({
   },
 });
 
-const Question = mongoose.model("Answer", answerSchema);
+const Answer = mongoose.model("Answer", answerSchema);
 
-module.exports = Question;
+module.exports = Answer;

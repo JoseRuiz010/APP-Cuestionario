@@ -19,6 +19,6 @@ const quiz_solution = new mongoose.Schema({
   answers: [{ type: mongoose.Schema.Types.ObjectId, ref: "Answer" }],
 });
 
-const Question = mongoose.model("Answer", quiz_solution);
+const Question = mongoose.model("Quiz_solutions", quiz_solution);
 
 module.exports = Question;
