@@ -12,6 +12,8 @@ const questionSchema = new mongoose.Schema({
   },
   options: [String],
   correctAnswer: String,
+  time: Number,
+  points: Number,
 });
 
 const Question = mongoose.model("Question", questionSchema);
