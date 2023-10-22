@@ -13,7 +13,6 @@ const validarCampos = (required_fields, body, res) => {
 const existence_required_fields = (required_fields, body) => {
 
   let isValid = true;
-
   if (required_fields.length > 0) {
     required_fields.forEach(c => {
       if (!body[c]) return isValid = false

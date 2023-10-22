@@ -45,7 +45,8 @@ const update = async (req, res) => {
 
 const check_email_password = async ({ username, password }) => {
   const user = await userModel.findOne({ username })
-  const isValid = ComparePass(password, user?.password)
+  const isValid = await ComparePass(password, user?.password)
+  console.log({ isValid });
   if (user && isValid) return user
 
   return null

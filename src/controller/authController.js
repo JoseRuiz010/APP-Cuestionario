@@ -1,26 +1,32 @@
 const { check_email_password } = require("./usersController")
 const { decodeToken, generarToken } = require("../utils/JWT_Token")
-const { validarCampos } = require("../utils/validation.campos.ep")
+const { customValidator } = require("../utils/validation.express-validator")
+const { validationResult } = require("express-validator")
 
 const login = async (req, res) => {
   const requiredField = ["username", "password"]
   const { username, password, ...rest } = req.body
-  // if (!username || !password) res.send("Error")
 
-  const resValidacion = validarCampos(requiredField, req.body, res);
-
-  if (resValidacion) res.send({ message: resValidacion, data: null })
+  //express validaror
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ error: errors.array(), data: null });
+  }
 
   try {
     const user = await check_email_password({ username, password })
-    const token =
+
+    if (!user) return res.status(201).json({ error: "credenciales invalidas", data: null });
+
+    const token = await
       generarToken({
         id: user._id
       })
-    return res.send({ message: resValidacion, data: { token } })
+
+    return res.send({ data: { token }, error: null })
 
   } catch (error) {
-    return res.send(401)
+    return res.send("Error al generar el token").status(500)
   }
 }
 
